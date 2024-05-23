@@ -20,11 +20,14 @@ button_spacing=20
 start_y=HEIGHT//2-(button_height*3+button_spacing*2)//2
 
 font = pygame.font.Font(None, 36)
+
 play_button = Button("PLAY", font, (0, 0, 255), (0, 0, 200), ((WIDTH+OFFSET)//2-50, start_y)) 
 help_button = Button("HELP", font, (0, 255, 0), (0, 200, 0), ((WIDTH+OFFSET)//2-50, start_y+button_height+button_spacing))
 quit_button = Button("QUIT", font, (255, 0, 0), (200, 0, 0), ((WIDTH+OFFSET)//2-50 , start_y+2*(button_height+button_spacing)))
-
-
+play_again_button=Button("PLAY AGAIN",font,(0,0,255),(0,0,200),(WIDTH//2-50,HEIGHT//2))
+exit_button=Button("EXIT",font,(255,0,0),(200,0,0),(WIDTH+20,HEIGHT//2+button_height+button_spacing))
+pause_button=Button("PAUSE",font,(0,0,255),(0,0,200),(WIDTH+20,HEIGHT//2))
+resume_button=Button("RESUME",font,(0,0,255),(0,0,200),(WIDTH//2-50,HEIGHT//2))
 # Trạng thái của game
 game_state = "menu"  # 'menu', 'playing', 'help'
 
@@ -46,7 +49,7 @@ def draw_menu():
 
 def draw_help():
     screen.fill((0, 0, 0))
-    help_text = font.render("This is the HELP screen. Press any key to return.", True, (255, 255, 255))
+    help_text = font.render("DISPLAY THE RULE OF CARO GAME", True, (255, 255, 255))
     screen.blit(help_text, (100, 300))
     pygame.display.flip()
 
@@ -54,10 +57,16 @@ def draw_game():
     screen.fill(WHITE)
     ui.draw_board(screen)
     player_info_ui.draw(screen)
+    if game_state=="playing":
+        pause_button.draw(screen)
+        exit_button.draw(screen)
+    elif game_state=="paused":
+        resume_button.draw(screen)
     if game.winner:
         font = pygame.font.Font(None, 36)
         text = font.render(f"{game.winner.name} wins!", True, (255, 0, 0))
         screen.blit(text, (WIDTH//2-50, HEIGHT//2-50))
+        play_again_button.draw(screen)
     pygame.display.flip()
 
 while running:
@@ -75,6 +84,16 @@ while running:
             if event.type == pygame.KEYDOWN:
                 game_state = "menu"
         elif game_state == "playing":
+
+            if game.winner and play_again_button.handle_event(event):
+                game.reset()
+                game_state = "playing"
+                game.winner=None
+            if exit_button.handle_event(event):
+                game_state = "menu"
+            if pause_button.handle_event(event):
+                game_state="paused"
+
             if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
                 game_state = "menu"
             if event.type == pygame.MOUSEBUTTONDOWN:
@@ -87,7 +106,9 @@ while running:
                         col = pos[0] // SQ_SIZE
                         if game.handle_click(row, col,player_info_ui):
                             player_info_ui.reset_time(game.current_player_index)
-                            
+        elif game_state=="paused":
+            if resume_button.handle_event(event):
+                game_state="playing"                     
 
     current_time = pygame.time.get_ticks()
     if current_time - last_time >= 1000 and game_state == "playing" and not game.winner:
@@ -102,8 +123,9 @@ while running:
         draw_menu()
     elif game_state == "help":
         draw_help()
-    elif game_state == "playing":
+    elif game_state == "playing" or game_state=="paused":
         draw_game()
+    
 
     clock.tick(60)
 
