@@ -1,6 +1,6 @@
 
 class Player:
-    def __init__(self, name,symbol,time=30):
+    def __init__(self, name,symbol,time=5):
         self.name = name
         self.symbol=symbol
         self.time=time

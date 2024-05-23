@@ -54,6 +54,10 @@ def draw_game():
     screen.fill(WHITE)
     ui.draw_board(screen)
     player_info_ui.draw(screen)
+    if game.winner:
+        font = pygame.font.Font(None, 36)
+        text = font.render(f"{game.winner.name} wins!", True, (255, 0, 0))
+        screen.blit(text, (WIDTH//2-50, HEIGHT//2-50))
     pygame.display.flip()
 
 while running:
@@ -83,13 +87,15 @@ while running:
                         col = pos[0] // SQ_SIZE
                         if game.handle_click(row, col,player_info_ui):
                             player_info_ui.reset_time(game.current_player_index)
+                            
 
     current_time = pygame.time.get_ticks()
-    if current_time - last_time >= 1000 and game_state == "playing":
+    if current_time - last_time >= 1000 and game_state == "playing" and not game.winner:
         player_info_ui.update_time(game.current_player_index)
         if game.get_current_player().time == 0:
-            game.switch_player()
+            game.switch_player(player_info_ui)
             player_info_ui.reset_time(game.current_player_index)
+            
         last_time = current_time
 
     if game_state == "menu":

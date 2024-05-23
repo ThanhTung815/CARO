@@ -42,4 +42,4 @@ class PLAYERINFOUI:
         self.players[current_player_index].time -= 1
 
     def reset_time(self, current_player_index):
-        self.players[current_player_index].time = 30
+        self.players[current_player_index].time = 5
