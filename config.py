@@ -8,6 +8,7 @@ X_COLOR_WIN=(52,87,154)
 O_COLOR_WIN=(187,33,41)
 WIDTH=525
 HEIGHT=525
+OFFSET=200
 SQ_SIZE=WIDTH//15
 
 X_image=pygame.image.load('assets/images/X.png')

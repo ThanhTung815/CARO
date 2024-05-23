@@ -45,7 +45,7 @@ class Board:
                         return winning_squares
                     
         return []
-        return False
+        
 
     def count_direction(self,row,col,direction):
         count=1
