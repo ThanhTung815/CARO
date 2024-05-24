@@ -24,14 +24,17 @@ font = pygame.font.Font(None, 36)
 play_button = Button("PLAY", font, (0, 0, 255), (0, 0, 200), ((WIDTH+OFFSET)//2-50, start_y)) 
 help_button = Button("HELP", font, (0, 255, 0), (0, 200, 0), ((WIDTH+OFFSET)//2-50, start_y+button_height+button_spacing))
 quit_button = Button("QUIT", font, (255, 0, 0), (200, 0, 0), ((WIDTH+OFFSET)//2-50 , start_y+2*(button_height+button_spacing)))
+
+# tạo các nút cho game
 play_again_button=Button("PLAY AGAIN",font,(0,0,255),(0,0,200),(WIDTH//2-50,HEIGHT//2))
 exit_button=Button("EXIT",font,(255,0,0),(200,0,0),(WIDTH+20,HEIGHT//2+button_height+button_spacing))
 pause_button=Button("PAUSE",font,(0,0,255),(0,0,200),(WIDTH+20,HEIGHT//2))
 resume_button=Button("RESUME",font,(0,0,255),(0,0,200),(WIDTH//2-50,HEIGHT//2))
-# Trạng thái của game
-game_state = "menu"  # 'menu', 'playing', 'help'
 
-# Khởi tạo đối tượng game và các lớp UI
+# Trạng thái của game
+game_state = "menu"  # 'menu', 'playing', 'help', 'paused'
+
+
 game = Game()
 ui = UI(game)
 player_info_ui = PLAYERINFOUI(game.players)
@@ -41,6 +44,7 @@ last_time = pygame.time.get_ticks()
 running = True
 
 def draw_menu():
+    # Vẽ màn hình menu với các nút PLAY, HELP, QUIT
     screen.fill((0, 0, 0))
     play_button.draw(screen)
     help_button.draw(screen)
@@ -48,12 +52,14 @@ def draw_menu():
     pygame.display.flip()
 
 def draw_help():
+    # Vẽ màn hình trợ giúp ( thông tin hướng dẫn game )
     screen.fill((0, 0, 0))
     help_text = font.render("DISPLAY THE RULE OF CARO GAME", True, (255, 255, 255))
     screen.blit(help_text, (100, 300))
     pygame.display.flip()
 
 def draw_game():
+    # Vẽ màn hình game với bảng chơi và thông tin người chơi 
     screen.fill(WHITE)
     ui.draw_board(screen)
     player_info_ui.draw(screen)
@@ -70,6 +76,7 @@ def draw_game():
     pygame.display.flip()
 
 while running:
+    # Xử lý các sự kiện
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
@@ -109,7 +116,7 @@ while running:
         elif game_state=="paused":
             if resume_button.handle_event(event):
                 game_state="playing"                     
-
+    
     current_time = pygame.time.get_ticks()
     if current_time - last_time >= 1000 and game_state == "playing" and not game.winner:
         player_info_ui.update_time(game.current_player_index)

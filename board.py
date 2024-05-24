@@ -5,13 +5,17 @@ from config import *
 
 class Board:
     def __init__(self,size=15):
+        '''
+        Khởi tạo bàn cờ với kích thước mặc định 15x15,grid là ma trận để lưu trữ các dấu X,O
+        '''
         self.size=size
         self.grid=[['' for _ in range(size)] for _ in range(size)]
         self.temp_mark=None
         self.last_mark=None
     def draw(self,screen):
-
-        #vẽ ô vuông viền đen
+        '''
+        Vẽ bảng chơi lên màn hình
+        '''
         screen.fill(WHITE)
         for row in range(self.size):
             for col in range(self.size):
@@ -30,6 +34,9 @@ class Board:
 
 
     def update(self,row,col,player_symbol):
+        '''
+        Cập nhật bảng với ký hiệu của người chơi tại vị trí chỉ định
+        '''
         if self.grid[row][col]=='':
             self.grid[row][col]=player_symbol
             self.last_mark=(row,col)
@@ -37,6 +44,9 @@ class Board:
         return False
     
     def check_win(self):
+        '''
+        Kiểm tra xem có người chơi nào thắng chưa
+        '''
         for row in range(self.size):
             for col in range(self.size):
                 if self.grid[row][col]!='':
@@ -48,6 +58,9 @@ class Board:
         
 
     def count_direction(self,row,col,direction):
+        '''
+        Đếm số lượng ký hiệu liên tiếp theo một hướng nhất định
+        '''
         count=1
         winning_squares=[(row,col)]
         for i in range(1,self.size):
@@ -68,6 +81,9 @@ class Board:
                 break
         return count,winning_squares
     def check_five(self,row,col):
+        '''
+        Kiểm tra xem có 5 ký hiệu liên tiếp theo hàng ngang, hàng dọc,đường chéo không
+        '''
         directions=[(0,1),(1,0),(1,1),(1,-1)]
         for d in directions:
             count,winning_squares=self.count_direction(row,col,d)

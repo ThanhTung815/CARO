@@ -4,8 +4,15 @@ from config import *
 
 class UI:
     def __init__(self,game):
+        '''
+        Khởi tạo giao diện người dùng với game đã được truyền vào
+        '''
         self.game=game
+
     def draw_board(self,screen):
+        '''
+        Vẽ bảng chơi và các ô thắng lên màn hình
+        '''
         self.game.board.draw(screen)
         winning_squares=self.game.board.check_win()
         for row,col in winning_squares:
@@ -19,6 +26,9 @@ class UI:
     
     
     def handle_click(self,pos):
+        '''
+        Xử lý sự kiện click chuột lên bảng chơi
+        '''
         x,y=pos
         if x>=WIDTH:
             self.game.handle_click(pos)
